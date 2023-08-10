@@ -1,0 +1,188 @@
+import React, { useEffect, useState } from "react";
+import { Col, Row, Typography, Button, Form, AutoComplete } from "antd";
+import { useForm } from "antd/lib/form/Form";
+import { useTranslation } from "react-i18next";
+import { CurrencyOptionForm } from "./CurrencyOptionForm";
+import { renderRows } from "../../../../../utils/component-utils";
+import { CurrencyType } from "../../../../../constants/currencies";
+
+export const CurrenciesForm = ({ initialData }) => {
+  const [optionFields, setOptionFields] = useState(initialData?.options || []);
+  const [currencyType, setCurrencyType] = useState("coin");
+  const { t: translate } = useTranslation();
+
+  const isUpdating = !!initialData.type;
+  const isCoin = currencyType === "coin";
+
+  const [form] = useForm();
+
+  const t = (id) => translate(`setter.layouts.configurations.currencies.${id}`);
+
+  useEffect(() => {
+    if (initialData?.type) {
+      setCurrencyType(initialData.type);
+    }
+  }, [initialData]);
+
+  const handleFormChange = (key, value) => {
+    if (key === "type") {
+      setCurrencyType(value);
+    }
+  };
+
+  const handleSubmit = (values) => {
+    console.log("Form values:", values);
+    // Handle form submission
+    // You can access the form values via the 'values' parameter
+    // For example: onCompleted(values);
+  };
+
+  const generalRows = [
+    [
+      <Form.Item name="visible" label={t("form.visible")}>
+        <AutoComplete />
+      </Form.Item>
+    ],
+    [
+      <Form.Item name="name" label={t("form.name")}>
+        <AutoComplete />
+      </Form.Item>,
+      <Form.Item
+        name="type"
+        label={t("form.type")}
+        rules={[{ required: true }]}
+      >
+        <AutoComplete
+          options={Object.values(CurrencyType).map((value) => ({ value }))}
+          disabled={isUpdating}
+        />
+      </Form.Item>
+    ],
+    [
+      <Form.Item name="code" label={t("form.code")} disabled={isUpdating}>
+        <AutoComplete />
+      </Form.Item>,
+      <Form.Item name="symbol" label={t("form.symbol")}>
+        <AutoComplete />
+      </Form.Item>
+    ],
+    [
+      isCoin && (
+        <Form.Item name="blockchain_key" label={t("form.blockchain_key")}>
+          <AutoComplete />
+        </Form.Item>
+      ),
+      <Form.Item name="position" label={t("form.position")}>
+        <AutoComplete />
+      </Form.Item>
+    ],
+    [
+      <Form.Item name="precision" label={t("form.precision")}>
+        <AutoComplete />
+      </Form.Item>,
+      <Form.Item
+        name="subunits"
+        label={t("form.subunits")}
+        rules={[{ required: isCoin }]}
+        noStyle
+      >
+        <AutoComplete disabled={!isCoin} />
+      </Form.Item>
+    ],
+    [
+      <Form.Item name="icon_url" label={t("form.icon_url")}>
+        <AutoComplete />
+      </Form.Item>
+    ]
+  ];
+
+  const depositRows = [
+    [
+      <Form.Item name="deposit_enabled" label={t("form.deposit_enabled")}>
+        <AutoComplete />
+      </Form.Item>
+    ],
+    [
+      <Form.Item name="deposit_fee" label={t("form.deposit_fee")}>
+        <AutoComplete />
+      </Form.Item>
+    ],
+    [
+      <Form.Item name="min_deposit_amount" label={t("form.min_deposit_amount")}>
+        <AutoComplete />
+      </Form.Item>
+    ],
+    [
+      <Form.Item name="min_collection_amount" label={t("form.min_collection_amount")}>
+        <AutoComplete />
+      </Form.Item>
+    ]
+  ];
+
+  const withdrawRows = [
+    [
+      <Form.Item name="withdrawal_enabled" label={t("form.withdrawal_enabled")}>
+        <AutoComplete />
+      </Form.Item>
+    ],
+    [
+      <Form.Item name="withdraw_fee" label={t("form.withdraw_fee")}>
+        <AutoComplete />
+      </Form.Item>
+    ],
+    [
+      <Form.Item name="min_withdraw_amount" label={t("form.min_withdraw_amount")}>
+        <AutoComplete />
+      </Form.Item>
+    ],
+    [
+      <Form.Item name="withdraw_limit_24h" label={t("form.withdraw_limit_24h")}>
+        <AutoComplete />
+      </Form.Item>
+    ],
+    [
+      <Form.Item name="withdraw_limit_72h" label={t("form.withdraw_limit_72h")}>
+        <AutoComplete />
+      </Form.Item>
+    ]
+  ];
+
+  return (
+    <>
+      <Form
+        form={form}
+        className="setter-form"
+        onValuesChange={handleFormChange}
+        onFinish={handleSubmit}
+        initialValues={initialData}
+      >
+        <Row gutter={24}>
+          <Col span={12} className="form-section">
+            <Typography.Title level={5}>General</Typography.Title>
+            {renderRows(generalRows)}
+          </Col>
+          <Col span={6} className="form-section">
+            <Typography.Title level={5}>Deposit</Typography.Title>
+            {renderRows(depositRows)}
+          </Col>
+          <Col span={6} className="form-section">
+            <Typography.Title level={5}>Withdraw</Typography.Title>
+            {renderRows(withdrawRows)}
+          </Col>
+        </Row>
+        {isCoin && (
+          <Row>
+            <Col span={24} className="form-section">
+              <CurrencyOptionForm fields={optionFields} setFields={setOptionFields} />
+            </Col>
+          </Row>
+        )}
+        <Form.Item>
+          <Button type="primary" htmlType="submit">
+            {isUpdating ? t("form.update") : t("form.create")}
+          </Button>
+        </Form.Item>
+      </Form>
+    </>
+  );
+};

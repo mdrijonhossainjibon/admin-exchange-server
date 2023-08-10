@@ -1,0 +1,12 @@
+# Ignore specific file types
+*.log
+*.txt
+*.csv
+
+# Ignore directories
+node_modules/
+dist/
+
+# Exclude files based on patterns
+**/test/
+**/*.md

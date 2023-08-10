@@ -1,0 +1,1 @@
+export const SelectDepositData = (state) => state.public.Operations.Deposit

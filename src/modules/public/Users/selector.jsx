@@ -1,0 +1,1 @@
+export const SelectUserdata = (state)=> state.public.users;

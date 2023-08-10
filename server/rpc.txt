@@ -1,0 +1,12 @@
+Private Key: 096c717f9ea9c849ddf8c1bdf9fb88e35f614bad3671d7d90cc434e0385f5254
+Bitcoin Testnet Address: mnoY3AFcXmzGmtWj1mEEiiYEyK4s3J4rZd
+Server Run Start http://localhost:5000
+
+getblockcount
+getbestblockhash
+getconnectioncount
+getdifficulty
+getblockchaininfo
+getmininginfo
+getpeerinfo
+getrawmempool

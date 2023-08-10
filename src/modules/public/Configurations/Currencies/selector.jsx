@@ -1,0 +1,1 @@
+export const SelectCurrencisData = (state)=> state.public.Configurations.Currencies

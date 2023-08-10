@@ -1,0 +1,1 @@
+export const Login = (state) => state.public.admin.uid;
