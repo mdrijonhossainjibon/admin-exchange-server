@@ -1,8 +1,8 @@
 
 
 export const API_CALL_ENDPOINT = {
-    serverurl: `http://${window.location.hostname}:5000`,
-    adminserver : `http://${window.location.hostname}:3003`,
+    serverurl: `https://server-jaqg.onrender.com`,
+    adminserver : `https://server-jaqg.onrender.com`,
     base_api_verson : '/api/v1',
     methed_post: 'post',
     methed_get: 'get',
@@ -15,7 +15,7 @@ export const API_CALL_ENDPOINT = {
 }
 
 export const WSS_CALL_ENDPOINT = {
-    LocalWebsoket : 'ws://localhost:5001',
-    UserWallet : 'ws://localhost:5004',
+    LocalWebsoket : 'https://server-jaqg.onrender.com',
+    UserWallet : 'https://server-jaqg.onrender.com',
 
 }
