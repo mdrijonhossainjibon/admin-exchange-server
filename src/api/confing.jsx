@@ -15,7 +15,7 @@ export const API_CALL_ENDPOINT = {
 }
 
 export const WSS_CALL_ENDPOINT = {
-    LocalWebsoket : 'https://server-jaqg.onrender.com',
-    UserWallet : 'https://server-jaqg.onrender.com',
+    LocalWebsoket : 'wss://server-jaqg.onrender.com',
+    UserWallet : 'wss://server-jaqg.onrender.com',
 
 }
