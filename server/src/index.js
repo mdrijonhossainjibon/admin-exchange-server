@@ -13,7 +13,11 @@ app.get('/',(req,rep)=>{
   rep.json({ "api-version": "1.0", StatusCode: 200, msg: "Welcome To Api server" })
 })
 app.use('/api/v1',require('./api'))
-app.listen(process.env.PORT || 4009,()=>{
-    console.log(`server start admin ${process.env.PORT || 4009}`)
-})
-
+const server = app.listen(process.env.PORT || 4009, () => {
+    const address = server.address();
+    if (address) {
+        console.log(`Server started on http://${address.address}:${address.port}`);
+    } else {
+        console.log('Server started, but address information is not available.');
+    }
+});
