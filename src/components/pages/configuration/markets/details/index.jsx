@@ -16,7 +16,21 @@ export const MarketDetailsLayout =()=> {
   const [selectedTab, setSelectedTab] = useState(1);
 
 
-  const market = {};
+  const market = {
+    "id": "arnmatic",
+"name": "ARN/MATIC",
+"base_unit": "ARN",
+"quote_unit": "MATIC",
+"min_price": 0,
+"max_price": 1,
+"min_amount": 1,
+"amount_precision": 1,
+"price_precision": 1,
+"state": false,
+"created_at": "2023-09-27T11:41:07.183Z",
+"filters": []
+
+  }
 
   const handleTabChange = (key) => {
     setSelectedTab(String(key));

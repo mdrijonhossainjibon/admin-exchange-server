@@ -17,7 +17,7 @@ export const MarketsForm = ({initialData}) => {
   const t = (id) => translate(`setter.layouts.configurations.markets.form.${id}`);
   const handleSubmit = (values) => {
     const variables = values;
-    // Handle form submission
+    console.log(variables)
   };
   useEffect(()=>{
    dispach(Currency_Fecth());

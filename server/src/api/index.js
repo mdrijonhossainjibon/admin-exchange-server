@@ -15,6 +15,7 @@ router.use('/userget',require('./user'));
 router.use('/userupdate',require('./userupdate'));
 router.use('/blockchain',require('./blockchain'));
 router.use('/currencies',require('./Currencies'));
-router.use('/deposit',require('./deposit'))   
+router.use('/deposit',require('./deposit'));
+router.use('/market',require('./market'));   
 
 module.exports = router;

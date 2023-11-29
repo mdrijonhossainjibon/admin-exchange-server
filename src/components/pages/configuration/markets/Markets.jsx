@@ -4,6 +4,7 @@ import { Table, Switch, Button, Modal, Card, Space } from "antd";
 import { useTranslation } from "react-i18next";
 import{ MarketsForm }from "./form";
 import { useNavigate } from "react-router-dom";
+import { APIREQ, API_CALL_ENDPOINT } from '../../../../api'
 
 import { useDate } from "../../../../utils/hooks";
 
@@ -11,7 +12,7 @@ import { useDate } from "../../../../utils/hooks";
 export const Markets =() => {
   const [isModalOpen, setModalOpen] = useState(false);
   const { formatDate } = useDate();
-
+  const [tableData,settableData] = useState([]);
   const { t: translate } = useTranslation();
   const history = useNavigate()
 
@@ -23,34 +24,12 @@ export const Markets =() => {
   };
 
   const t = (id) => translate(`setter.layouts.configurations.markets.${id}`);
+  
+  APIREQ({ url : `${API_CALL_ENDPOINT.base_api_verson}/market`}).then((resp)=>{
+    settableData(resp.data.result.data)
+  })
 
-  const tableData = [
-    {
-      key: 1,
-      name: "Bitcoin",
-      base_currency: { name: "BTC" },
-      quote_currency: { name: "USD" },
-      created_at: "2023-06-15",
-      updated_at: "2023-06-16",
-      max_price: 50000,
-      min_price: 40000,
-      min_amount: 0.001,
-      enabled: true,
-    },
-    {
-      key: 2,
-      name: "Ethereum",
-      base_currency: { name: "ETH" },
-      quote_currency: { name: "USD" },
-      created_at: "2023-06-17",
-      updated_at: "2023-06-18",
-      max_price: 3000,
-      min_price: 2000,
-      min_amount: 0.01,
-      enabled: false,
-    },
-    // Add more objects as needed
-  ];
+   
  
   const columns = [
     {
@@ -60,13 +39,13 @@ export const Markets =() => {
     },
     {
       title: t("table.baseCurrency"),
-      dataIndex: ["base_currency", "name"],
-      key: "base_currency.name",
+      dataIndex: ["base_unit"],
+      key: "base_unit",
     },
     {
       title: t("table.quoteCurrency"),
-      dataIndex: ["quote_currency", "name"],
-      key: "quote_currency.name",
+      dataIndex: ["quote_unit"],
+      key: "quote_unit",
     },
     {
       title: t("table.created"),

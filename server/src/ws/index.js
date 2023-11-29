@@ -1,75 +1,166 @@
-const WebSocket = require("ws");
+const WebSocket = require('ws');
 
-const localWebSocket = new WebSocket.Server({ port: 5009 });
-let num = 0;
+const server = new WebSocket.Server({ port: 9003 });
 
-// Store the subscribed clients
-const subscribedClients = new Set();
-let interval;
+// Simulated ticker data (replace this with your actual data source)
+const tickerData = {
+  ltcbtc: {
+    lastPrice: 0.005,
+    volume: 100,
+    // Add other ticker information as needed
+  },
+  ethbtc: {
+    lastPrice: 0.02,
+    volume: 200,
+    // Add other ticker information as needed
+  },
+  // Add more trading pairs as needed
+};
 
-localWebSocket.on('connection', (ws) => {
-  console.log('Connected');
+// Function to simulate updating ticker data (replace this with your actual data update logic)
+const updateTickerData = () => {
+  for (const pair in tickerData) {
+    // Simulate price changes
+    tickerData[pair].lastPrice += Math.random() * 0.01 - 0.005;
 
-  ws.on('message', (data) => {
-    try {
-      const parsedData = JSON.parse(data);
-      switch (parsedData.method) {
-        case 'subscribe':
-          console.log('Client subscribed to updates params');
-          subscribedClients.add(ws); // Add the client to the set of subscribed clients
+    // Simulate volume changes
+    tickerData[pair].volume += Math.floor(Math.random() * 10) - 5;
+  }
+};
 
-          // Start the interval when the first client subscribes
-          if (subscribedClients.size === 1) {
-            interval = setInterval(() => {
-              num = Number(num + 1);
-              const message = {
-                event: 'update',
-                data: [
-                  {
-                    key: 'bsc-testnet',
-                    BlockNumber: Number((Math.random() * 10000).toFixed(4))
-                  },
-                  {
-                    key: 'testnet',
-                    BlockNumber: Number((Math.random() * 10000).toFixed(4))
-                  }
-                ],
-                message: 'Updated Block Number => ' + num
-              };
-
-              subscribedClients.forEach((client) => {
-                //client.send(JSON.stringify(message));
-              });
-            }, 3000);
-          }
-          break;
-        case 'unsubscribe':
-          console.log('Client unsubscribed from updates');
-          subscribedClients.delete(ws); // Remove the client from the set of subscribed clients
-          ws.send(JSON.stringify({data : [],message : { error :  'unsubscribed Incoming Message'}}))
-          // Stop the interval when the last client unsubscribes
-          if (subscribedClients.size === 0) {
-            clearInterval(interval);
-            interval = null;
-          }
-          break;
-        default:
-          console.log('Unknown method:', parsedData.method);
-          ws.send(JSON.stringify({data : [],message : { error :  'Unknown method:'+ parsedData.method}}))
+// Handle ltcbtc.trades stream
+const ltcbtcTradesStream = (socket) => {
+  // Simulate sending ltcbtc.trades data every 3 seconds
+  const sendTradesData = () => {
+    updateTickerData(); // Update ticker data
+ 
+    const tradesMessage = {
+      "global.tickers": {
+        "ltcbtc": getRandomTickerData(),
+        "btcltc": getRandomTickerData(),
+        "ethbtc": getRandomTickerData(),
+        "xrpusdt": getRandomTickerData(),
+        "adausdt" : getRandomTickerData(),
+        "ltcusdt": getRandomTickerData(),
       }
+    };
+    
+    function getRandomTickerData() {
+      return {
+        "amount": getRandomValue(50, 300),           // Random value between 50 and 300
+        "avg_price": getRandomValue(0.01, 0.1),      // Random value between 0.01 and 0.1
+        "high": getRandomValue(0.02, 0.15),          // Random value between 0.02 and 0.15
+        "last": getRandomValue(0.01, 0.1),           // Random value between 0.01 and 0.1
+        "low": getRandomValue(0.005, 0.05),          // Random value between 0.005 and 0.05
+        "open": getRandomValue(0.01, 0.1),           // Random value between 0.01 and 0.1
+        "price_change_percent": getRandomValue(-15, 15), // Random value between -15 and 15
+        "volume": getRandomValue(5000, 20000)        // Random value between 5000 and 20000
+      };
+    }
+    
+    function getRandomValue(min, max) {
+      return (Math.random() * (max - min) + min).toFixed(5);
+    }
+    
+    
+    
+    socket.send(JSON.stringify(tradesMessage));
+
+    setTimeout(sendTradesData, 3000); // Send every 3 seconds
+  };
+
+  // Start sending ltcbtc.trades data
+  sendTradesData();
+
+  // Handle disconnection
+  socket.on('close', () => {
+    console.log('Client disconnected');
+  });
+};
+
+
+
+
+
+
+
+
+
+
+server.on('connection', (socket) => {
+  console.log('Client connected');
+
+  // In the 'connection' event handler
+  socket.on('message', (message) => {
+    console.log(`Received message: ${message}`);
+    let data;
+    try {
+      data = JSON.parse(message);
     } catch (error) {
-      console.error('Error parsing client message:', error);
+      console.error('Error parsing JSON:', error);
+      return;
+    }
+
+    // Handle different stream types
+    if (data.event === 'subscribe') {
+      // Handle subscription message
+      const streams = data.streams || [];
+      
+      if (streams.includes('ltcbtc.trades')) {
+        ltcbtcTradesStream(socket);
+      }
+   
+     if(   streams.includes('ltcusdt.kline-1m')){
+
+      setInterval(() => {
+        const currentTime = Date.now();
+        const newCandle = [
+            currentTime,
+            Math.random() * 100,
+            Math.random() * 100,
+            Math.random() * 100,
+            Math.random() * 100,
+            Math.random() * 1000
+        ];
+    
+        socket.send(JSON.stringify({
+            "adausdt.kline-1m": newCandle
+        }));
+        socket.send(JSON.stringify({
+          "arnbnb.kline-1m": newCandle
+      }));
+    },  1000); // Set interval to 2 minutes (2 minutes * 60 seconds * 1000 milliseconds)
+    
+
+   
+
+     }
+     if(streams.includes('algobtc.ob-inc')){
+      setInterval(() => {
+        socket.send(JSON.stringify({
+          'algobtc.ob-inc' : {
+            asks : [[Math.random().toString(), Math.random().toString()]],
+            bids : [[Math.random().toString(), Math.random().toString()]],
+            sequence: Math.random()
+          }
+        }))
+      }, 1000);
+     }
+    } else {
+      console.warn('Unknown message:', data);
     }
   });
 
-  ws.on('close', () => {
-    console.log('Disconnected');
-    subscribedClients.delete(ws); // Remove the client from the set of subscribed clients
-
-    // Stop the interval when the last client disconnects
-    if (subscribedClients.size === 0) {
-      clearInterval(interval);
-      interval = null;
-    }
+  // Handle disconnection
+  socket.on('close', () => {
+    console.log('Client disconnected');
   });
 });
+
+console.log('WebSocket server running on port 9003');
+
+
+
+
+
+

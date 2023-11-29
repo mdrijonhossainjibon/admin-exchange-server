@@ -19,7 +19,7 @@ const Currencies = mongoose.model('Currencies',Type.Currencieschema);
 const Deposit = mongoose.model('Deposit',Type.DepositSchema)
 
 const Userwallet = mongoose.model('Userwallet', Type.userWalletSchema);
-const NOSQL = { KYC ,USER,Google2FA ,Userwallet,FeeGroup,Blockchain,Currencies,Deposit}
+const NOSQL = { KYC ,USER,Google2FA ,Userwallet,FeeGroup,Blockchain,Currencies,Deposit ,Market}
 
 
 module.exports = NOSQL

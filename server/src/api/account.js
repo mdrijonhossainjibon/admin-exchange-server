@@ -41,7 +41,7 @@ router.post('/', async (req, rep) => {
             if (Users.role === 'admin' || Users.role === 'superadmin' || Users.role === 'accountant' || Users.role === 'technical' || Users.role === 'support') {
             
               if (Users.status === 'active') {
-                if (Users.KycVerified === 'verified') {
+                if (Users.kyc_status ===  'verified') {
                   // Perform actions for an active, verified account with appropriate permissions
                 } else {
                   //console.log('You do not have permission to access this account. KYC verification is required.');
@@ -86,7 +86,7 @@ router.post('/verify',(req,rep)=>{
           if (Users.role === 'admin' || Users.role === 'superadmin' || Users.role === 'accountant' || Users.role === 'technical' || Users.role === 'support') {
           
             if (Users.status === 'active') {
-              if (Users.KycVerified === 'verified') {
+              if (Users.kyc_status === 'verified') {
                 // Perform actions for an active, verified account with appropriate permissions
               } else {
                 //console.log('You do not have permission to access this account. KYC verification is required.');

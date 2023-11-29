@@ -55,57 +55,23 @@ const KYCSchema = new mongoose.Schema({
 
 
 
-const UserSchema = new mongoose.Schema({
-  uid: {
-    type: String,
-    required: true,
-  },
-  email: {
-    type: String,
-    required: true,
-  },
-  password: {
-    type: String,
-    required: true,
-  },
-  twoFactorAuth: {
-    type: Boolean,
-    default: false,
-  },
-  referral: {
-    type: String,
-
-  },
-  referralBy: {
-    type: String,
-    default: null,
-  },
-  level: {
-    type: String,
-    default: '0',
-  },
+ const UserSchema = new  mongoose.Schema ({
+  email: { type: String, required: true },
+  password: { type: String, required: true },
+  level: { type: Number, required: true ,default : 0},
   role: {
     type: String,
-    default: 'user',
+    enum: ['admin', 'superadmin', 'accountant', 'technical', 'support', 'user'], default : 'user'
   },
-  group: {
-    type: String,
-    default: 'VIP 0'
-  },
-  KycVerified: {
-    type: String,
-    enum: ['verified', 'pending', 'rejected', 'unverified'],
-    default: 'unverified',
-  },
-  status: {
-    type: String,
-    enum: ['active', 'inactive'],
-    default: 'active',
-  },
-  timetamp: {
-    type: Date,
-    default: Date.now
-  }
+  status: { type: String, enum: ['active', 'suspend', 'pending', 'inactive'],default : 'pending'},
+  uid: { type: String, required: true },
+  referal_uid: { type: String, default: null },
+  two_factor_auth: { type: Boolean, default: false }, // Updated to lowercase
+  kyc_status: { type: String, enum: ['pending', 'verified', 'rejected', 'hold', 'review' , 'notsubmit'] }, // Added kyc_status field
+  language : { type : String, default : 'en'},
+  created_at: {  type: Date , default : Date.now() },
+  updated_at: { type: Date , default : Date.now() },
+  
 });
 
 const google2faSchema = new mongoose.Schema({
@@ -116,49 +82,58 @@ const google2faSchema = new mongoose.Schema({
 
 
 const marketSchema = new mongoose.Schema({
-  baseCurrency: {
-    type: String,
-    required: true
+  id: {
+      type: String,
+      required: true,
   },
-  quoteCurrency: {
-    type: String,
-    required: true
+  name: {
+      type: String,
+      required: true,
   },
-  amountPrecision: {
-    type: Number,
-    required: true
+  base_currency: {
+      type: String,
+      required: true,
   },
-  pricePrecision: {
-    type: Number,
-    required: true
+  quote_currency: {
+      type: String,
+      required: true,
   },
-  maxPrice: {
-    type: Number,
-    required: true
+  amount_precision: {
+      type: Number,
+      required: true,
   },
-  minPrice: {
-    type: Number,
-    required: true
+  price_precision: {
+      type: Number,
+      required: true,
   },
-  minAmount: {
-    type: Number,
-    required: true
+  max_price: {
+      type: Number,
+      required: true,
   },
-  position: {
-    type: String,
-    required: true
+  min_price: {
+      type: Number,
+      required: true,
   },
-  Enabled: {
-    type: Boolean,
-    default: true
+  min_amount: {
+      type: Number,
+      required: true,
+  },
+  enabled: {
+      type: Boolean,
+      default: true,
   },
   status: {
-    type: Boolean,
-    default: false
+      type: Boolean,
+      default: false,
   },
-  tradeStart: {
-    type: Date
-  }
+  created_at: {
+      type: Date,
+      default: Date.now,
+  },
+  updated_at: {
+      type: Date,
+      default: Date.now,
+  },
 });
 
 

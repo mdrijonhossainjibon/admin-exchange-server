@@ -4,41 +4,35 @@ import { EllipsisOutlined } from "@ant-design/icons";
 import { useTranslation } from "react-i18next";
 import { useDate } from "../../../../../../utils/hooks";
 import { useNavigate } from "react-router-dom";
+import { APIREQ, API_CALL_ENDPOINT } from "../../../../../../api";
+import { useState } from "react";
 
 export const MarketDetailsMain =() =>{
   const { t: translate } = useTranslation();
   const { formatDate } = useDate();
   const history = useNavigate();
   const goToCurrencyDetails = (code) => {
-    //history.push(Routes.withParams.CurrenciesDetails({ code }));
+    history({pathname : '/configuration/currencies/details/'+code});
   };
 
   const t = (id) => translate(`setter.layouts.configurations.markets.details.${id}`);
   //if (!market) return <></>;
 
   const market = {
-    name: "BTC/USD",
-    created_at: new Date(),
-    updated_at: new Date(),
-    base_currency: {
-      name: "Bitcoin",
-      visible: false,
-    },
-    base_unit: "BTC",
-    quote_currency: {
-      name: "US Dollar",
-      visible: true,
-    },
-    quote_unit: "USD",
-    amount_precision: 8,
-    price_precision: 2,
-    max_price: 50000,
-    min_price: 10000,
-    min_amount: 0.001,
-    position: "1",
-  };
+    "id": "arnmatic",
+"name": "ARN/MATIC",
+"base_unit": "ARN",
+"quote_unit": "MATIC",
+"min_price": 0,
+"max_price": 1,
+"min_amount": 1,
+"amount_precision": 1,
+"price_precision": 1,
+"state": false,
+"created_at": "2023-09-27T11:41:07.183Z",
+"filters": []
 
-  
+  }
 
   return (
     <Descriptions bordered column={{ xxl: 2, xl: 2, lg: 2, md: 1, sm: 1, xs: 1 }}>
@@ -65,15 +59,15 @@ export const MarketDetailsMain =() =>{
                 <Button
                   shape="circle"
                   icon={<EllipsisOutlined />}
-                  onClick={() => goToCurrencyDetails('market.base_unit')}
+                  onClick={() => goToCurrencyDetails(market.base_unit)}
                 />
               }
             >
               <List.Item.Meta
                 title={
                   <Badge
-                    status={market.base_currency?.visible ? "success" : "error"}
-                    text={`${market.base_currency?.name} (${market.base_unit.toUpperCase()})`}
+                    status={'market.base_currency?.visible' ? "success" : "error"}
+                    text={`${market.base_unit} (${market.base_unit.toUpperCase()})`}
                   />
                 }
               />
@@ -91,7 +85,7 @@ export const MarketDetailsMain =() =>{
                 <Button
                   shape="circle"
                   icon={<EllipsisOutlined />}
-                  onClick={() => goToCurrencyDetails('market.quote_unit')}
+                  onClick={() => goToCurrencyDetails(market.quote_unit)}
                 />
               }
             >
@@ -99,7 +93,7 @@ export const MarketDetailsMain =() =>{
                 title={
                   <Badge
                     status={'market.quote_currency?.visible '? "success" : "error"}
-                    text={`${market.quote_currency?.name} (${market.quote_unit.toUpperCase()})`}
+                    text={`${market.base_unit} (${market.quote_unit.toUpperCase()})`}
                   />
                 }
               />
