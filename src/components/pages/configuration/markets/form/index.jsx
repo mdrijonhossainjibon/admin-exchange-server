@@ -5,6 +5,7 @@ import { useParams } from "react-router-dom";
 import moment from 'moment';
 import { Currency_Fecth,SelectCurrencisData } from "../../../../../modules";
 import { useDispatch, useSelector } from "react-redux";
+import { APIREQ, API_CALL_ENDPOINT } from "../../../../../api";
 
 const { Option } = Select;
 
@@ -15,10 +16,15 @@ export const MarketsForm = ({initialData}) => {
   const isUpdating = !!initialData;
   const dispach = useDispatch();
   const t = (id) => translate(`setter.layouts.configurations.markets.form.${id}`);
-  const handleSubmit = (values) => {
+
+  const handleSubmit = async (values) => {
     const variables = values;
-    console.log(variables)
+    const data = await APIREQ({ url : `${API_CALL_ENDPOINT.base_api_verson}/market/create` ,  method : 'post' , body : variables})
+    console.log(data)
   };
+
+
+
   useEffect(()=>{
    dispach(Currency_Fecth());
   },[dispach]);
